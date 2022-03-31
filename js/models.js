@@ -97,10 +97,6 @@ class StoryList {
 
     // Filters out removes story based on ID matching
     this.stories = this.stories.filter((story) => story.storyId !== storyId);
-
-    // do the same thing for the user's favorites
-    user.favorites = user.favorites.filter((s) => s.storyId !== storyId);
-    user.ownStories = user.ownStories.filter((s) => s.storyId !== storyId);
   }
 }
 
