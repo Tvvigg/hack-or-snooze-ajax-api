@@ -88,6 +88,7 @@ class StoryList {
 
   /**Deletes story from api and then removes it from the dom */
   async removeStory(user, storyId) {
+    console.debug("delete story");
     const token = user.loginToken;
     await axios({
       url: `${BASE_URL}/stories/${storyId}`,
@@ -97,6 +98,9 @@ class StoryList {
 
     // Filters out removes story based on ID matching
     this.stories = this.stories.filter((story) => story.storyId !== storyId);
+
+    // do the same thing for the user's favorites
+    user.favorites = user.favorites.filter((s) => s.storyId !== storyId);
   }
 }
 
@@ -118,9 +122,7 @@ class User {
     this.name = name;
     this.createdAt = createdAt;
 
-    // instantiate Story instances for the user's favorites and ownStories
     this.favorites = favorites.map((s) => new Story(s));
-    this.ownStories = ownStories.map((s) => new Story(s));
 
     // store the login token on the user so it's easy to find for API calls.
     this.loginToken = token;

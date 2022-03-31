@@ -19,14 +19,15 @@ async function getAndShowStoriesOnStart() {
  * Returns the markup for the story.
  */
 
-function generateStoryMarkup(story, showDeleteBtn = false) {
+function generateStoryMarkup(story) {
   // console.debug("generateStoryMarkup", story);
 
   const hostName = story.getHostName();
   const showStar = Boolean(currentUser);
+
   return $(`
       <li id="${story.storyId}">
-      ${showDeleteBtn ? getDeleteBtnHTML() : ""}
+      ${getDeleteBtnHTML()}
       ${showStar ? getStarHTML(story, currentUser) : ""}
         <a href="${story.url}" target="a_blank" class="story-link">
           ${story.title}
@@ -80,9 +81,9 @@ $submitForm.on("submit", submitNewStory);
 
 function getDeleteBtnHTML() {
   return `
-      <span class="trash-can">
-        <i class="fas fa-trash-alt"></i>
-      </span>`;
+  <span class="trash-can">
+    <i class="fas fa-trash-alt"></i>
+  </span>`;
 }
 
 /** Make favorite/not-favorite star for story */
@@ -96,26 +97,6 @@ function getStarHTML(story, user) {
       </span>`;
 }
 
-// /** Put favorites list on page. */
-
-// function putFavoritesListOnPage() {
-//   console.debug("putFavoritesListOnPage");
-
-//   $favoritedStories.empty();
-
-//   if (currentUser.favorites.length === 0) {
-//     $favoritedStories.append("<h5>No favorites added!</h5>");
-//   } else {
-//     // loop through all of users favorites and generate HTML for them
-//     for (let story of currentUser.favorites) {
-//       const $story = generateStoryMarkup(story);
-//       $favoritedStories.append($story);
-//     }
-//   }
-
-//   $favoritedStories.show();
-// }
-
 /** Deletes story  */
 async function deleteStory(evt) {
   console.debug("deleteStory");
@@ -126,10 +107,10 @@ async function deleteStory(evt) {
   await storyList.removeStory(currentUser, storyId);
 
   // re-generate story list
-  await putUserStoriesOnPage();
+  await putStoriesOnPage();
 }
 
-$ownStories.on("click", ".trash-can", deleteStory);
+$body.on("click", ".trash-can", deleteStory);
 
 /**Adds or removes a story from the users favorites list */
 async function toggleFavorite(evt) {
@@ -149,4 +130,4 @@ async function toggleFavorite(evt) {
   }
 }
 
-$allStoriesList.on("click", toggleFavorite);
+$allStoriesList.on("click", ".star", toggleFavorite);
